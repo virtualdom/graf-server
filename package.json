@@ -2,6 +2,24 @@
   "name": "graf-server",
   "version": "0.0.0",
   "description": "The server supporting the graf application.",
+  "dependencies": {
+    "bluebird": "^3.4.1",
+    "boom": "^3.2.2",
+    "hapi": "^13.4.1",
+    "hapi-auth-basic": "^4.2.0",
+    "joi": "^8.4.2",
+    "mongodb": "^2.1.18"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3",
+    "nodemon": "^1.9.2"
+  },
+  "scripts": {
+    "dev": "PORT=8080 ENV=test nodemon src/index.js",
+    "start": "nodemon src/index.js",
+    "test": "ENV=test mocha test --require test/setup.js --recursive --timeout 30000"
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:virtualdom/graf-server.git"
