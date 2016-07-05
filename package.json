@@ -1,0 +1,10 @@
+{
+  "name": "graf-server",
+  "version": "0.0.0",
+  "description": "The server supporting the graf application.",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:virtualdom/graf-server.git"
+  },
+  "license": "MIT"
+}
