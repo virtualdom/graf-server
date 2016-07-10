@@ -2,6 +2,7 @@
   "name": "graf-server",
   "version": "0.0.0",
   "description": "The server supporting the graf application.",
+  "author": "Dominic Joseph <dtpjoseph@gmail.com> (http://www.dominicjoseph.io)",
   "dependencies": {
     "bluebird": "^3.4.1",
     "boom": "^3.2.2",
