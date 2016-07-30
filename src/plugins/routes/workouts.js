@@ -12,13 +12,19 @@ exports.register = (server, options, next) => {
       handler: (req, reply) => {
         return dbConnect(options.credentials.db)
         .then((client) => {
-          return client.collection('grafworkouts').find({
-            username: req.params.username,
-            date: {
-              $lte: req.query.end_date,
-              $gte: req.query.start_date
-            }
-          }, {_id: 0})
+          const params = { username: req.params.username };
+
+          if (req.query.start_date || req.query.end_date) {
+            params.date = {};
+
+            if (req.query.start_date)
+              params.date['$gte'] = req.query.start_date;
+
+            if (req.query.end_date)
+              params.date['$lte'] = req.query.end_date;
+          }
+
+          return client.collection('grafworkouts').find(params, {_id: 0})
           .count();
         })
         .then((count) => reply({data: count}))
@@ -27,8 +33,8 @@ exports.register = (server, options, next) => {
       auth: 'simple',
       validate: {
         query: {
-          start_date: Joi.date().required(),
-          end_date: Joi.date().min(Joi.ref('start_date')).required()
+          start_date: Joi.date().optional(),
+          end_date: Joi.date().optional()
         }
       }
     }
@@ -39,17 +45,42 @@ exports.register = (server, options, next) => {
     path: '/workouts',
     config: {
       handler: (req, reply) => {
-        return dbConnect(options.credentials.db)
+        const connection = dbConnect(options.credentials.db);
+
+        return connection
         .then((client) => {
           return client.collection('grafworkouts').insert({
             username: req.auth.credentials.username,
             date: new Date()
           });
         })
-        .then(() => reply().code(204))
+        .then(() => connection)
+        .then((client) => {
+          const params = { username: req.auth.credentials.username };
+
+          if (req.query.start_date || req.query.end_date) {
+            params.date = {};
+
+            if (req.query.start_date)
+              params.date['$gte'] = req.query.start_date;
+
+            if (req.query.end_date)
+              params.date['$lte'] = req.query.end_date;
+          }
+
+          return client.collection('grafworkouts').find(params, {_id: 0})
+          .count();
+        })
+        .then((count) => reply({data: count}))
         .catch(reply);
       },
-      auth: 'simple'
+      auth: 'simple',
+      validate: {
+        query: {
+          start_date: Joi.date().optional(),
+          end_date: Joi.date().optional()
+        }
+      }
     }
   });
 
@@ -59,8 +90,9 @@ exports.register = (server, options, next) => {
     config: {
       handler: (req, reply) => {
         let grafworkouts;
+        const connection = dbConnect(options.credentials.db);
 
-        return dbConnect(options.credentials.db)
+        return connection
         .then((client) => {
           grafworkouts = client.collection('grafworkouts');
 
@@ -71,11 +103,39 @@ exports.register = (server, options, next) => {
           .limit(1)
           .toArray();
         })
-        .then((workout) => grafworkouts.remove({_id: workout[0]._id}))
-        .then(() => reply().code(204))
+        .then((workouts) => {
+          if (workouts.length === 0) return;
+
+          return grafworkouts.remove({_id: workouts[0]._id})
+        })
+        .then(() => connection)
+        .then((client) => {
+          const params = { username: req.auth.credentials.username };
+
+          if (req.query.start_date || req.query.end_date) {
+            params.date = {};
+
+            if (req.query.start_date)
+              params.date['$gte'] = req.query.start_date;
+
+            if (req.query.end_date)
+              params.date['$lte'] = req.query.end_date;
+          }
+
+          return client.collection('grafworkouts').find(params, {_id: 0})
+          .count();
+        })
+        .then((count) => reply({data: count}))
+
         .catch(reply);
       },
-      auth: 'simple'
+      auth: 'simple',
+      validate: {
+        query: {
+          start_date: Joi.date().optional(),
+          end_date: Joi.date().optional()
+        }
+      }
     }
   });
 
