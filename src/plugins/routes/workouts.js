@@ -9,6 +9,7 @@ exports.register = (server, options, next) => {
     method: 'GET',
     path: '/workouts/{username}',
     config: {
+      cors: true,
       handler: (req, reply) => {
         return dbConnect(options.credentials.db)
         .then((client) => {
@@ -44,6 +45,7 @@ exports.register = (server, options, next) => {
     method: 'POST',
     path: '/workouts',
     config: {
+      cors: true,
       handler: (req, reply) => {
         const connection = dbConnect(options.credentials.db);
 
@@ -88,6 +90,7 @@ exports.register = (server, options, next) => {
     method: 'DELETE',
     path: '/workouts',
     config: {
+      cors: true,
       handler: (req, reply) => {
         let grafworkouts;
         const connection = dbConnect(options.credentials.db);

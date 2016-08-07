@@ -11,6 +11,7 @@ exports.register = (server, options, next) => {
     method: 'GET',
     path: '/users/{username}',
     config: {
+      cors: true,
       handler: (req, reply) => {
         const cipher = Crypto.createCipher('aes256', options.credentials.authPassword);
         const username = req.params.username;
@@ -31,6 +32,7 @@ exports.register = (server, options, next) => {
     method: 'POST',
     path: '/users',
     config: {
+      cors: true,
       handler: (req, reply) => {
         const cipher = Crypto.createCipher('aes256', options.credentials.authPassword);
         const username = req.payload.username;

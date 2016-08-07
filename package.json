@@ -9,6 +9,7 @@
     "hapi": "^13.4.1",
     "hapi-auth-basic": "^4.2.0",
     "joi": "^8.4.2",
+    "moment": "^2.14.1",
     "mongodb": "^2.1.18"
   },
   "devDependencies": {

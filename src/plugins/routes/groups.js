@@ -10,6 +10,7 @@ exports.register = (server, options, next) => {
     method: 'GET',
     path: '/groups',
     config: {
+      cors: true,
       handler: (req, reply) => {
         return dbConnect(options.credentials.db)
         .then((client) => {
@@ -28,6 +29,7 @@ exports.register = (server, options, next) => {
     method: 'GET',
     path: '/groups/{groupName}',
     config: {
+      cors: true,
       handler: (req, reply) => {
         const groupName = req.params.groupName;
 
@@ -53,6 +55,7 @@ exports.register = (server, options, next) => {
     method: 'POST',
     path: '/groups',
     config: {
+      cors: true,
       handler: (req, reply) => {
         const groupName = req.payload.name;
         const username = req.auth.credentials.username;
